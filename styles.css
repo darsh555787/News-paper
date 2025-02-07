@@ -340,5 +340,10 @@
       text-align: center; /* Center the text on mobile */
     }
   }
-  
+  .side-stories img {
+    width: 100%;
+    height: auto;
+    max-width: 400px; /* Optional: you can set a max-width to keep it within a reasonable size */
+}
+
     
