@@ -346,4 +346,51 @@
     max-width: 400px; /* Optional: you can set a max-width to keep it within a reasonable size */
 }
 
+/* Popup Modal Styling */
+.modal {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 50px); /* Adjusted height to fill the remaining space */
+    background-color: rgba(0, 0, 0, 0); /* Set background to fully transparent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+  
+    background-color: #1f1e1e;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    margin: auto;
+}
+
+/* Close Button Styling */
+.close {
+    background-color: #686868;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    position: absolute;
+    top: 3px;
+    right: 20px;
+    font-size: 1.5rem;
+    transition: background-color 0.3s;
+}
+
+.close:hover {
+    background-color: #ff4d4d;
+}
+
     
+
