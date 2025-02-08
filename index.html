@@ -119,11 +119,33 @@
     <footer class="footer">
       <p>© 2025 लैन्गिक कढरे , धुळे सर्व हक्क राखीव.</p>
     </footer>
+
+    <!-- Popup Modal -->
+    <div id="popup-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img src="./sir.jpg" alt="Popup Image" style="width: 100%; height: auto;">
+        <h1 style="text-align: center; color:red;">सिस्टल च्या ठळक बातम्या।</h1>
+        <h2 style="text-align: center; color:rgb(241, 234, 234);">लैन्गिक कढरे , सर्व हक्क राखीव.</h2>
+      </div>
+    </div>
   </div>
+
+  
   <script>
     // Set the current date
     const options = { year: 'numeric', month: 'long', day: 'numeric', locale: 'mr-IN' };
     document.getElementById('current-date').innerText = `दिनांक: ${new Date().toLocaleDateString('mr-IN', options)}`;
+
+    // Show the popup modal on page load
+    window.onload = function() {
+      document.getElementById('popup-modal').style.display = 'block';
+    };
+
+    // Function to close the modal
+    function closeModal() {
+      document.getElementById('popup-modal').style.display = 'none';
+    }
   </script>
 </body>
 </html>
