@@ -21,3 +21,12 @@ window.onload = function() {
 function closeModal() {
     document.getElementById('popup-modal').style.display = 'none';
 }
+
+// Function to toggle video play/pause
+function toggleVideo(videoElement) {
+    if (videoElement.paused) {
+        videoElement.play();
+    } else {
+        videoElement.pause();
+    }
+}
