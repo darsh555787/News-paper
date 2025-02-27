@@ -61,50 +61,191 @@
                     <img src="ghamu.jpg" alt="Monsoon in Kerala" class="news-image">
                   </div>
                   <h3>काय बोलणार राव आता तुमहीच सांगा काय करावा।🙄</h3>
-                  <div class="comment-box" style="margin-bottom: 20px;">
-                    <textarea class="comment-input" placeholder="लिहा भो इथे पण १ च दा फुल्ल अँड फायनल " rows="3" style="width: 100%; border: 2px solid #007BFF; border-radius: 5px; padding: 10px; font-size: 16px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"></textarea>
-                    <button onclick="submitComment(this)" style="margin-top: 5px; background-color: blue; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px; transition: background-color 0.3s;">SEND</button>
+                  
+                  <div class="comment-box" style="margin-bottom: 20px; background-color: #f8f9fa; padding: 15px; border-radius: 8px;">
+                    <h4 style="margin-top: 0; color: #495057;">आपला अभिप्राय द्या:</h4>
+                    <div id="comment-form-container">
+                      <textarea class="comment-input" placeholder="लिहा भो इथे पण १ च दा फुल्ल अँड फायनल" rows="3" style="width: 100%; border: 1px solid #ced4da; border-radius: 4px; padding: 10px; font-size: 16px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); margin-bottom: 10px;"></textarea>
+                      
+                      <div style="display: flex; justify-content: flex-end;">
+                        <button onclick="submitComment(this)" style="background-color: #007bff; color: white; border: none; padding: 8px 20px; cursor: pointer; border-radius: 4px; transition: background-color 0.3s; font-weight: bold;">SEND</button>
+                      </div>
+                    </div>
+                    <div id="already-commented-message" style="display: none; background-color: #e2e3e5; padding: 10px; border-radius: 4px; margin-top: 10px; text-align: center; color: #383d41;">
+                      आपण आपली कशी केली आहे एकदा परत नका करू🥱.धन्यवाद!
+                    </div>
+                    
                     <div class="comments-display" style="margin-top: 20px;">
-                      <h4>Comments:</h4>
+                      <h4 style="border-bottom: 1px solid #dee2e6; padding-bottom: 8px; color: #495057;">सर्व अभिप्राय:</h4>
                       <ul class="comments-list" style="list-style-type: none; padding: 0;">
+                        <!-- Comments will be loaded here -->
                       </ul>
+                      <div id="no-comments-message" style="font-style: italic; color: #6c757d; text-align: center; padding: 10px;">अद्याप कोणतेही अभिप्राय नाहीत</div>
                     </div>
                   </div>
+                  
                   <script>
-                    let commentSubmitted = false; // Track if a comment has been submitted
-
-                    function submitComment(button) {
-                      const commentBox = button.parentElement;
-                      const commentInput = commentBox.querySelector('.comment-input');
-                      const commentsList = commentBox.querySelector('.comments-list');
-
-                      if (commentSubmitted) {
-                        alert("You can only submit one comment.");
-                        return;
+                    // Execute this immediately when the script loads
+                    document.addEventListener('DOMContentLoaded', function() {
+                      loadComments();
+                      checkUserCommented();
+                    });
+                
+                    function loadComments() {
+                      const commentsList = document.querySelector('.comments-list');
+                      const noCommentsMessage = document.getElementById('no-comments-message');
+                      
+                      // Get comments from localStorage
+                      let comments = [];
+                      try {
+                        const storedComments = localStorage.getItem('blogComments');
+                        comments = storedComments ? JSON.parse(storedComments) : [];
+                      } catch (e) {
+                        console.error("Error loading comments:", e);
+                        comments = [];
                       }
-                      const commentText = commentInput.value.trim();
-                      if (commentText) {
-                        const newComment = document.createElement('li');
-                        newComment.textContent = commentText;
-
-                        // Create a delete button for the comment
-                        const deleteButton = document.createElement('button');
-                        deleteButton.textContent = 'Delete';
-                        deleteButton.style.marginLeft = '10px';
-                        deleteButton.onclick = function() {
-                          commentsList.removeChild(newComment);
-                          commentSubmitted = false; // Allow new comment submission
-                        };
-
-                        newComment.appendChild(deleteButton);
-                        commentsList.appendChild(newComment);
-                        commentInput.value = ''; // Clear the input after submission
-                        commentSubmitted = true; // Mark that a comment has been submitted
+                      
+                      // Clear the comments list
+                      commentsList.innerHTML = '';
+                      
+                      if (comments && comments.length > 0) {
+                        noCommentsMessage.style.display = 'none';
+                        
+                        // Sort comments by date (newest first)
+                        comments.sort((a, b) => b.timestamp - a.timestamp);
+                        
+                        comments.forEach(comment => {
+                          addCommentToDOM(comment);
+                        });
+                      } else {
+                        noCommentsMessage.style.display = 'block';
                       }
                     }
+                
+                    function checkUserCommented() {
+                      const userCommented = localStorage.getItem('userCommented') === 'true';
+                      const commentFormContainer = document.getElementById('comment-form-container');
+                      const alreadyCommentedMessage = document.getElementById('already-commented-message');
+                      
+                      if (userCommented) {
+                        commentFormContainer.style.display = 'none';
+                        alreadyCommentedMessage.style.display = 'block';
+                      } else {
+                        commentFormContainer.style.display = 'block';
+                        alreadyCommentedMessage.style.display = 'none';
+                      }
+                    }
+                
+                    function addCommentToDOM(commentObj) {
+                      const commentsList = document.querySelector('.comments-list');
+                      
+                      const newComment = document.createElement('li');
+                      newComment.setAttribute('data-id', commentObj.id);
+                      newComment.style.padding = '10px';
+                      newComment.style.marginBottom = '10px';
+                      newComment.style.backgroundColor = 'white';
+                      newComment.style.borderRadius = '4px';
+                      newComment.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+                      newComment.style.position = 'relative';
+                      
+                      // Create comment text
+                      const commentText = document.createElement('div');
+                      commentText.textContent = commentObj.text;
+                      commentText.style.wordBreak = 'break-word';
+                      commentText.style.marginRight = '50px'; // Make room for delete button
+                      
+                      // Create a delete button for the comment
+                      const deleteButton = document.createElement('button');
+                      deleteButton.textContent = 'Delete';
+                      deleteButton.style.position = 'absolute';
+                      deleteButton.style.right = '10px';
+                      deleteButton.style.top = '10px';
+                      deleteButton.style.backgroundColor = '#dc3545';
+                      deleteButton.style.color = 'white';
+                      deleteButton.style.border = 'none';
+                      deleteButton.style.borderRadius = '3px';
+                      deleteButton.style.padding = '3px 8px';
+                      deleteButton.style.fontSize = '12px';
+                      deleteButton.style.cursor = 'pointer';
+                      
+                      deleteButton.onclick = function() {
+                        removeComment(commentObj.id);
+                      };
+                
+                      // Assemble the comment
+                      newComment.appendChild(commentText);
+                      newComment.appendChild(deleteButton);
+                      
+                      commentsList.appendChild(newComment);
+                    }
+                
+                    function submitComment(button) {
+                      const commentBox = button.closest('.comment-box');
+                      const commentInput = commentBox.querySelector('.comment-input');
+                
+                      const commentText = commentInput.value.trim();
+                      
+                      if (commentText) {
+                        const commentObj = {
+                          id: Date.now().toString(),
+                          text: commentText,
+                          timestamp: Date.now()
+                        };
+                        
+                        // Save comment to localStorage
+                        saveComment(commentObj);
+                        
+                        // Mark user as having commented
+                        localStorage.setItem('userCommented', 'true');
+                        
+                        // Clear the input after submission
+                        commentInput.value = '';
+                        
+                        // Reload comments and update UI
+                        loadComments();
+                        checkUserCommented();
+                      }
+                    }
+                
+                    function saveComment(commentObj) {
+                      let comments = [];
+                      try {
+                        const storedComments = localStorage.getItem('blogComments');
+                        comments = storedComments ? JSON.parse(storedComments) : [];
+                      } catch (e) {
+                        comments = [];
+                      }
+                      
+                      comments.push(commentObj);
+                      localStorage.setItem('blogComments', JSON.stringify(comments));
+                    }
+                
+                    function removeComment(commentId) {
+                      // Remove from localStorage
+                      let comments = [];
+                      try {
+                        const storedComments = localStorage.getItem('blogComments');
+                        comments = storedComments ? JSON.parse(storedComments) : [];
+                      } catch (e) {
+                        comments = [];
+                      }
+                      
+                      // Check if this is the user's comment
+                      const userComment = comments.find(comment => comment.id === commentId);
+                      if (userComment) {
+                        // Allow the user to comment again
+                        localStorage.setItem('userCommented', 'false');
+                      }
+                      
+                      comments = comments.filter(comment => comment.id !== commentId);
+                      localStorage.setItem('blogComments', JSON.stringify(comments));
+                      
+                      // Reload comments and update UI
+                      loadComments();
+                      checkUserCommented();
+                    }
                   </script>
-                </div>
-                <div class="news-item">
+                </div><div class="news-item">
                   <div class="image-container">
                     <img src="./4.jpg" alt="Monsoon in Kerala" class="news-image">
                   </div>
